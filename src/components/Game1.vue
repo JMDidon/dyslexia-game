@@ -8,52 +8,75 @@
       class="back-button"
       >Back</csm-button
     >
-    <h1>Draggable Elements</h1>
-    <div
-      class="draggable"
-      :draggable="true"
-      @dragstart="drag($event, o)"
-      v-for="(o,index) of origin"
-      :key="index"
-      @click.stop
-    >
-      
+    <csm-pill @csmClick="goToGameList" class="next-button">I'm done!</csm-pill>
+    <img src="./../assets/Animal1.svg" alt="Animal" />
+    <div class="instruction">
+      <div class="panel">
+        <div class="instructionsPanel">
+          <h1 class="h2">Word recognition</h1>
+          <h2 class="h2">Waouh, look!</h2>
+          <p>There are wells!</p>
+          <button type="button" @click="playInstruction()">
+            <!-- speaker icon goes here -->
+            <img src="./../assets/Hear instructions.png" alt="" />
+            <span class="listen"
+              ><span class="sr-only">Listen to the</span>Instructions</span
+            >
+          </button>
+        </div>
+        <div class="game"></div>
+      </div>
+    </div>
+    <div class="draggable-container">
+      <div
+        class="draggable"
+        :draggable="true"
+        @dragstart="drag($event, o)"
+        v-for="o of origin"
+        :key="o"
+        @click.stop
+      >
+        {{ o }}
+      </div>
+    </div>
 
-    </div>
     <div class="basket_container">
-      <div class="basket_column">
-        <h2>Target1</h2>
-        <div id="target" @dragover.prevent @drop="drop">
-          <div class="draggable" v-for="t of target1" :key="t">
+      <div id="target" class="basket_column">
+        <div @dragover.prevent @drop="drop">
+          <img src="./../assets/well.png" alt="well" />
+          <!-- <div class="draggable" v-for="t of target1" :key="t">
             {{ t }}
-          </div>
+          </div> -->
+          <csm-pill>General words</csm-pill>
         </div>
       </div>
-      <div class="basket_column">
-        <h2>Target2</h2>
-        <div id="target2" @dragover.prevent @drop="drop2">
-          <div class="draggable" v-for="t of target2" :key="t">
+      <div id="target2" class="basket_column">
+        <div @dragover.prevent @drop="drop2">
+          <img src="./../assets/well.png" alt="well" />
+          <!-- <div class="draggable" v-for="t of target2" :key="t">
             {{ t }}
-          </div>
+          </div> -->
+          <csm-pill>Irregular words</csm-pill>
         </div>
       </div>
-      <div class="basket_column">
-        <h2>Target3</h2>
-        <div id="target3" @dragover.prevent @drop="drop3">
-          <div class="draggable" v-for="t of target3" :key="t">
+      <div id="target3" class="basket_column">
+        <div @dragover.prevent @drop="drop3">
+          <img src="./../assets/well.png" alt="well" />
+          <!-- <div class="draggable" v-for="t of target3" :key="t">
             {{ t }}
-          </div>
+          </div> -->
+          <csm-pill>Words with no meaning</csm-pill>
         </div>
       </div>
     </div>
-    <div>{{ this.result }} / 9</div>
-    <csm-button @csmClick="goToGameList">I'm done!</csm-button>
+    <!-- <div>{{ this.result }} / 9</div> -->
   </div>
 </template>
 
 <script>
 import { defineComponent, ref } from "@vue/composition-api";
 import router from "@/router";
+import well from "./../assets/Well.mp3";
 
 const setup = props => {
   const goToGameList = () => router.push({ path: "/gamelist" });
@@ -115,6 +138,10 @@ export default defineComponent({
       const text = ev.dataTransfer.getData("text");
       this.spliceArray(text);
       this.target3.push(text);
+    },
+    playInstruction() {
+      const audio = new Audio(well);
+      audio.play();
     }
   },
   data() {
@@ -123,8 +150,8 @@ export default defineComponent({
         name: "General word",
         answer: [
           "maze",
-          "trial",
-          "cream"
+          "trial"
+          //   "cream"
           // "peace", "way", "day"
         ]
       },
@@ -132,17 +159,17 @@ export default defineComponent({
         name: "Sight word",
         answer: [
           "niece",
-          "through",
-          "eyes"
+          "through"
+          //   "eyes"
           //  "laugh", "cough", "doubt"
         ]
       },
       {
         name: "Nonsense word",
         answer: [
-          "flaos",
-          "qarmel",
-          "faw"
+          "flaos"
+          //   "qarmel",
+          //   "faw"
           // "lare", "miro", "himmer"
         ]
       }
@@ -154,11 +181,11 @@ export default defineComponent({
         "niece",
         "flaos",
         "trial",
-        "through",
-        "qarmel",
-        "cream",
-        "eyes",
-        "faw"
+        "through"
+        // "qarmel",
+        // "cream",
+        // "eyes",
+        // "faw"
         // "peace",
         // "laugh",
         // "lare",
@@ -180,29 +207,99 @@ export default defineComponent({
 </script>
 <style scoped>
 .game1 {
-  background: url("./../assets/background/word_recognition.jpg") no-repeat center center fixed; 
+  background: url("./../assets/background/word_recognition.png") no-repeat
+    center center fixed;
+  background-color: antiquewhite;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
+  height: 100%;
+  width: 100%;
+}
+
+.instruction {
+  /* display: flex;
+ justify-content: center; */
+  left: 40px;
+  position: absolute;
+  top: 200px;
+  width: 361px;
+  height: 382px;
+  background: #f9eded;
+  border-radius: 8px;
+}
+
+.instruction button {
+  background: none;
+  color: inherit;
+  border: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  outline: inherit;
+}
+
+.panel {
+  display: flex;
+  justify-content: center;
+}
+.instructionsPanel {
+}
+
+.draggable-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  width: 50%;
+  top: 15%;
+  left: 35%;
+  flex-wrap: wrap;
+  height: 160px;
 }
 .draggable {
-  margin-right: 5px;
+  margin-right: 30px;
+  width: 161px;
+  height: 51px;
+  border-radius: 8px;
+  background: #f9eded;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 #target,
 #target2,
 #target3 {
-  border: 1px solid black;
   width: 100%;
   height: 100px;
   padding: 5px;
+  width: 240px;
+  height: 240px;
+}
+
+#target {
+  margin-right: 40px;
+}
+#target2 {
+  margin: 0 40px 50px 0;
+}
+#target3 {
+  margin: 0 40px 80px 0;
+}
+
+img {
+  width: 250px;
 }
 
 .basket_container {
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
-  align-items: center;
+  justify-content: center;
+  align-items: flex-end;
+  position: absolute;
+  bottom: 170px;
+  left: 30%;
 }
 
 .basket_column {
@@ -218,7 +315,19 @@ export default defineComponent({
   cursor: pointer;
 }
 
+.next-button {
+  position: absolute;
+  bottom: 80px;
+  right: 26px;
+  cursor: pointer;
+}
+
 .draggable span {
-    margin: 20px;
+  margin: 20px;
+}
+
+csm-pill {
+  height: 50px;
+  min-width: 200px;
 }
 </style>
