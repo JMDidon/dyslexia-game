@@ -5,7 +5,6 @@ import CompanionChoice from '@/components/CompanionChoice';
 import Game10 from '@/components/Game10';
 import GameAssessment from '@/components/GameAssessment';
 import ParentsInfo from '@/components/ParentsInfo';
-import Welcome from '@/components/Welcome';
 import Tips from '@/components/Tips';
 import DragAndDrop from '@/components/DragAndDrop';
 import GameList from '@/components/GameList';
