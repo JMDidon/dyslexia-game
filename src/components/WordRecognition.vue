@@ -1,28 +1,37 @@
 <template>
   <div class="game1">
-    <csm-button
+    <!-- <csm-button
       icon="arrow-left"
       iconPosition="left"
       text
       @csmClick="goToGameList"
       class="back-button"
       >Back</csm-button
-    >
+    > -->
     <csm-pill @csmClick="goToGameList" class="next-button">I'm done!</csm-pill>
     <img src="./../assets/Animal1.svg" alt="Animal" />
+
     <div class="instruction">
       <div class="panel">
         <div class="instructionsPanel">
           <h1 class="h2">Word recognition</h1>
           <h2 class="h2">Waouh, look!</h2>
           <p>There are wells!</p>
-          <button type="button" @click="playInstruction()">
-            <!-- speaker icon goes here -->
+          <!-- <button type="button" @click="playInstruction()">
             <img src="./../assets/Hear instructions.png" alt="" />
             <span class="listen"
               ><span class="sr-only">Listen to the</span>Instructions</span
             >
-          </button>
+          </button> -->
+          <csm-button
+            icon="play"
+            iconPosition="left"
+            text
+            @csmClick="playInstruction"
+            ><span class="listen"
+              ><span class="sr-only">Listen to the</span>Instructions</span
+            ></csm-button
+          >
         </div>
         <div class="game"></div>
       </div>
@@ -32,7 +41,7 @@
         class="draggable"
         :draggable="true"
         @dragstart="drag($event, o)"
-        v-for="o of origin"
+        v-for="o of words.origin"
         :key="o"
         @click.stop
       >
@@ -44,7 +53,7 @@
       <div id="target" class="basket_column">
         <div @dragover.prevent @drop="drop">
           <img src="./../assets/well.png" alt="well" />
-          <!-- <div class="draggable" v-for="t of target1" :key="t">
+          <!-- <div class="draggable" v-for="t of words.target1" :key="t">
             {{ t }}
           </div> -->
           <csm-pill>General words</csm-pill>
@@ -53,7 +62,7 @@
       <div id="target2" class="basket_column">
         <div @dragover.prevent @drop="drop2">
           <img src="./../assets/well.png" alt="well" />
-          <!-- <div class="draggable" v-for="t of target2" :key="t">
+          <!-- <div class="draggable" v-for="t of words.target2" :key="t">
             {{ t }}
           </div> -->
           <csm-pill>Irregular words</csm-pill>
@@ -62,7 +71,7 @@
       <div id="target3" class="basket_column">
         <div @dragover.prevent @drop="drop3">
           <img src="./../assets/well.png" alt="well" />
-          <!-- <div class="draggable" v-for="t of target3" :key="t">
+          <!-- <div class="draggable" v-for="t of words.target3" :key="t">
             {{ t }}
           </div> -->
           <csm-pill>Words with no meaning</csm-pill>
@@ -81,130 +90,139 @@ import well from "./../assets/Well.mp3";
 const setup = props => {
   const goToGameList = () => router.push({ path: "/gamelist" });
   const result = ref(null);
+
+  const game1Solution = ref([
+    {
+      name: "General word",
+      answer: [
+        "maze",
+        "trial"
+        //   "cream"
+        // "peace", "way", "day"
+      ]
+    },
+    {
+      name: "Sight word",
+      answer: [
+        "niece",
+        "through"
+        //   "eyes"
+        //  "laugh", "cough", "doubt"
+      ]
+    },
+    {
+      name: "Nonsense word",
+      answer: [
+        "flaos"
+        //   "qarmel",
+        //   "faw"
+        // "lare", "miro", "himmer"
+      ]
+    }
+  ]);
+
+  const words = ref({
+    origin: [
+      "maze",
+      "niece",
+      "flaos",
+      "trial",
+      "through"
+      // "qarmel",
+      // "cream",
+      // "eyes",
+      // "faw"
+      // "peace",
+      // "laugh",
+      // "lare",
+      // "way",
+      // "cough",
+      // "miro",
+      // "day",
+      // "doubt",
+      // "himmer"
+    ],
+    target1: [],
+    target2: [],
+    target3: [],
+    game1Solution
+  });
+  const checkResult = (first, second) => {
+    const count = first.reduce((acc, val) => {
+      if (second.includes(val)) {
+        return ++acc;
+      }
+      return acc;
+    }, 0);
+
+    return count;
+  };
+  const spliceArray = text => {
+    const index = words.value.origin.findIndex(o => o === text);
+    words.value.origin.splice(index, 1);
+    if (words.value.origin.length === 0) {
+      const count1 = checkResult(
+        words.value.game1Solution[0].answer,
+        words.value.target1
+      );
+      const count2 = checkResult(
+        words.value.game1Solution[1].answer,
+        words.value.target2
+      );
+      const count3 = checkResult(
+        words.value.game1Solution[2].answer,
+        words.value.target3
+      );
+      const total = count1 + count2 + count3;
+      console.log("$total", total);
+      return total;
+    }
+  };
+
+  const drag = (ev, text) => {
+    ev.dataTransfer.setData("text", text);
+  };
+  const drop = ev => {
+    const text = ev.dataTransfer.getData("text");
+    spliceArray(text);
+    words.value.target1.push(text);
+  };
+  const drop2 = ev => {
+    const text = ev.dataTransfer.getData("text");
+    spliceArray(text);
+    words.value.target2.push(text);
+  };
+  const drop3 = ev => {
+    const text = ev.dataTransfer.getData("text");
+    spliceArray(text);
+    words.value.target3.push(text);
+  };
+  const playInstruction = () => {
+    const audio = new Audio(well);
+    audio.play();
+  };
+
   return {
+    words,
+    checkResult,
+    spliceArray,
+    drag,
+    drop,
+    drop2,
+    drop3,
     result,
-    goToGameList
+    goToGameList,
+    game1Solution,
+    playInstruction
   };
 };
 export default defineComponent({
-  name: "Game1",
+  name: "WordRecognition",
   props: {},
-  computed: {},
-  methods: {
-    checkResult(first, second) {
-      const count = first.reduce((acc, val) => {
-        if (second.includes(val)) {
-          return ++acc;
-        }
-        return acc;
-      }, 0);
-      return count;
-    },
-
-    drag(ev, text) {
-      ev.dataTransfer.setData("text", text);
-    },
-    spliceArray(text) {
-      const index = this.origin.findIndex(o => o === text);
-      this.origin.splice(index, 1);
-      if (this.origin.length === 0) {
-        const count1 = this.checkResult(
-          this.game1Solution[0].answer,
-          this.target1
-        );
-        const count2 = this.checkResult(
-          this.game1Solution[1].answer,
-          this.target2
-        );
-        const count3 = this.checkResult(
-          this.game1Solution[2].answer,
-          this.target3
-        );
-        this.result = count1 + count2 + count3;
-        console.log("$result", this.result);
-      }
-    },
-    drop(ev) {
-      const text = ev.dataTransfer.getData("text");
-      this.spliceArray(text);
-      this.target1.push(text);
-    },
-    drop2(ev) {
-      const text = ev.dataTransfer.getData("text");
-      this.spliceArray(text);
-      this.target2.push(text);
-    },
-    drop3(ev) {
-      const text = ev.dataTransfer.getData("text");
-      this.spliceArray(text);
-      this.target3.push(text);
-    },
-    playInstruction() {
-      const audio = new Audio(well);
-      audio.play();
-    }
-  },
-  data() {
-    const game1Solution = [
-      {
-        name: "General word",
-        answer: [
-          "maze",
-          "trial"
-          //   "cream"
-          // "peace", "way", "day"
-        ]
-      },
-      {
-        name: "Sight word",
-        answer: [
-          "niece",
-          "through"
-          //   "eyes"
-          //  "laugh", "cough", "doubt"
-        ]
-      },
-      {
-        name: "Nonsense word",
-        answer: [
-          "flaos"
-          //   "qarmel",
-          //   "faw"
-          // "lare", "miro", "himmer"
-        ]
-      }
-    ];
-
-    return {
-      origin: [
-        "maze",
-        "niece",
-        "flaos",
-        "trial",
-        "through"
-        // "qarmel",
-        // "cream",
-        // "eyes",
-        // "faw"
-        // "peace",
-        // "laugh",
-        // "lare",
-        // "way",
-        // "cough",
-        // "miro",
-        // "day",
-        // "doubt",
-        // "himmer"
-      ],
-      target1: [],
-      target2: [],
-      target3: [],
-      game1Solution
-    };
-  },
   setup
 });
 </script>
+
 <style scoped>
 .game1 {
   background: url("./../assets/background/word_recognition.png") no-repeat
@@ -219,8 +237,6 @@ export default defineComponent({
 }
 
 .instruction {
-  /* display: flex;
- justify-content: center; */
   left: 40px;
   position: absolute;
   top: 200px;
@@ -230,7 +246,22 @@ export default defineComponent({
   border-radius: 8px;
 }
 
-.instruction button {
+.instructionsPanel {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.game1 > img {
+  position: absolute;
+  left: -300px;
+  bottom: -380px;
+  z-index: 1;
+  width: 620px;
+}
+
+/* .instruction button {
   background: none;
   color: inherit;
   border: none;
@@ -238,13 +269,11 @@ export default defineComponent({
   font: inherit;
   cursor: pointer;
   outline: inherit;
-}
+} */
 
 .panel {
   display: flex;
   justify-content: center;
-}
-.instructionsPanel {
 }
 
 .draggable-container {
