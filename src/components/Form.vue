@@ -6,8 +6,10 @@
     <div class="form-container" >
       <h1>Hello! I'm Nazca!</h1>
       <form action="">
-        <div class="form">
-            <h3>What is your {{ title }}?</h3>
+        <fieldset class="form">
+            <legend><h3>What is your {{ title }}?</h3>
+              <p>(example: 7 years and 3 months)</p>
+            </legend>
           <div class="input-container" v-if="!showAge">
             <label for="name">Name</label>
             <csm-input type="text" @csmInput="inputName"></csm-input>
@@ -22,7 +24,7 @@
               <csm-input type="number" name="months" @csmInput="inputMonths" ></csm-input>
             </div>
           </div>
-        </div>
+        </fieldset>
       </form>
       <div class="next-container">
           <csm-button @csmClick="toggleShowAge" primary>Next</csm-button>
