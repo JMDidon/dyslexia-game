@@ -12,7 +12,7 @@
 
 
 
-|    BGM    |                                                                                               url                                                                                              |
+|    BGM    |                                                                                             Credit                                                                                             |
 |:---------:|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
 | Main Page |                        spacedust by airtone (c) copyright 2022 Licensed under a Creative Commons Attribution (3.0) license. http://dig.ccmixter.org/files/airtone/64741                        |
 | Main Page |       Little Candle by Stefan Kartenberg (c) copyright 2016 Licensed under a Creative Commons Attribution (3.0) license. http://dig.ccmixter.org/files/JeffSpeed68/55222 Ft: Admiral Bob       |
